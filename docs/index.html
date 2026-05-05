@@ -16,6 +16,7 @@
         --ink: #18201f;
         --muted: #5f6862;
         --paper: #f7f4ec;
+        --map-paper: #e7ece5;
         --line: rgba(24, 32, 31, 0.16);
         --accent: #23836b;
         --danger: #a64028;
@@ -41,12 +42,12 @@
       }
 
       aside {
-        padding: 28px;
+        padding: 26px;
         border-right: 1px solid var(--line);
         background: rgba(247, 244, 236, 0.96);
         display: flex;
         flex-direction: column;
-        gap: 28px;
+        gap: 24px;
         z-index: 500;
       }
 
@@ -89,7 +90,7 @@
 
       .metric {
         min-height: 92px;
-        padding: 16px;
+        padding: 14px;
         background: var(--paper);
         display: flex;
         flex-direction: column;
@@ -165,22 +166,41 @@
       #map {
         position: absolute;
         inset: 0;
-        background: #dfe7df;
+        background:
+          linear-gradient(rgba(24, 32, 31, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(24, 32, 31, 0.035) 1px, transparent 1px),
+          var(--map-paper);
+        background-size: 56px 56px;
+      }
+
+      .leaflet-container {
+        background: transparent;
+      }
+
+      .leaflet-control-zoom {
+        border: 0;
+        box-shadow: 0 12px 28px rgba(24, 32, 31, 0.12);
+      }
+
+      .leaflet-control-zoom a {
+        border: 0;
+        color: var(--ink);
+        background: rgba(247, 244, 236, 0.96);
       }
 
       .status {
         position: absolute;
-        left: 20px;
-        bottom: 20px;
+        right: 20px;
+        bottom: 18px;
         z-index: 450;
-        max-width: min(420px, calc(100% - 40px));
-        padding: 12px 14px;
-        color: var(--ink);
-        background: rgba(247, 244, 236, 0.94);
+        max-width: min(340px, calc(100% - 40px));
+        padding: 9px 11px;
+        color: var(--muted);
+        background: rgba(247, 244, 236, 0.82);
         border: 1px solid var(--line);
-        font-size: 0.84rem;
+        font-size: 0.76rem;
         line-height: 1.35;
-        box-shadow: 0 14px 34px rgba(24, 32, 31, 0.12);
+        box-shadow: 0 10px 24px rgba(24, 32, 31, 0.08);
       }
 
       .status.error {
@@ -248,6 +268,11 @@
         .map-wrap {
           min-height: 70svh;
         }
+
+        .status {
+          right: 14px;
+          bottom: 14px;
+        }
       }
     </style>
   </head>
@@ -298,7 +323,7 @@
             length, and nearest grocery distance with equal weights.
           </p>
           <p>
-            Serve this folder over HTTP to view locally:
+            Local preview:
             <code>python -m http.server</code>
           </p>
           <p>
@@ -360,13 +385,13 @@
       const map = L.map("map", {
         zoomControl: true,
         scrollWheelZoom: true,
+        preferCanvas: true,
       }).setView([42.2808, -83.743], 12);
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+      map.attributionControl.setPrefix(false);
+      map.attributionControl.addAttribution(
+        'OpenStreetMap contributors, U.S. Census TIGER/Line',
+      );
 
       const statusEl = document.getElementById("status");
       const tractCountEl = document.getElementById("tract-count");
@@ -483,11 +508,11 @@
             style: (feature) => {
               const score = Number(feature.properties.walkability_score);
               return {
-                color: "#18201f",
-                weight: 0.7,
-                opacity: 0.72,
+                color: "#f7f4ec",
+                weight: 1.3,
+                opacity: 0.95,
                 fillColor: colorForScore(score),
-                fillOpacity: 0.68,
+                fillOpacity: 0.9,
               };
             },
             onEachFeature: (feature, tractLayer) => {
@@ -495,8 +520,9 @@
               tractLayer.on({
                 mouseover: () => {
                   tractLayer.setStyle({
-                    weight: 2,
-                    fillOpacity: 0.86,
+                    color: "#18201f",
+                    weight: 2.5,
+                    fillOpacity: 0.96,
                   });
                   tractLayer.bringToFront();
                 },
@@ -507,9 +533,9 @@
             },
           }).addTo(map);
 
-          map.fitBounds(layer.getBounds(), { padding: [24, 24] });
+          map.fitBounds(layer.getBounds(), { padding: [56, 56] });
           statusEl.textContent =
-            "Loaded scored tracts. Select a tract or use the layer control to add supporting OSM layers.";
+            "Select a tract for metrics. Use the layer control for OSM overlays.";
 
           OVERLAY_SPECS.forEach((spec) => {
             loadOverlay(spec).catch((error) => {
