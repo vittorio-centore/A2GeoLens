@@ -9,6 +9,8 @@ A2GeoLens pulls open geospatial data for Ann Arbor, scores each census tract on 
 
 ## Live Map
 
+GitHub Pages: <https://vittorio-centore.github.io/A2GeoLens/>
+
 Local preview:
 
 ```bash
@@ -18,9 +20,9 @@ python -m http.server 8000
 
 Then open <http://localhost:8000>. The map must be served over HTTP; opening `docs/index.html` directly with `file://` can block GeoJSON loading in the browser.
 
-This repo is currently private, so GitHub Pages availability depends on the account and repository settings. If private Pages is enabled, publish from the `docs/` folder.
+GitHub Pages is configured to publish from the `stock` branch's `docs/` folder. If the repository remains private, access may still depend on GitHub account and repository visibility settings.
 
-Optional Felt link: _add public Felt map link here after publishing_.
+Optional Felt link: _add public Felt map link here after publishing from felt.com_.
 
 Felt-ready upload files are available in `docs/data/`:
 
@@ -82,7 +84,7 @@ Open the QGIS project after generating data:
 qgis/a2geolens.qgz
 ```
 
-If the QGIS project file has not been authored yet, create a new QGIS project, load the GeoJSON layers from `data/raw/` and `data/processed/`, style `walkability_score` with graduated symbology, save layer styles to `qgis/styles/`, and save the project as `qgis/a2geolens.qgz`.
+The repository includes a starter QGIS project at `qgis/a2geolens.qgz`. If QGIS asks to repair layer paths, point it at the matching GeoJSON files under `data/raw/` and `data/processed/`, then re-save the project.
 
 ## QGIS And Felt Finishing Steps
 
