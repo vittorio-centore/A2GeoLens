@@ -18,7 +18,7 @@ cd docs
 python -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. The map must be served over HTTP; opening `docs/index.html` directly with `file://` can block GeoJSON loading in the browser.
+Then open <http://localhost:8000>. The map also includes local JavaScript data bundles, so `docs/index.html` can be opened directly in a browser for quick preview.
 
 GitHub Pages is configured to publish from the `stock` branch's `docs/` folder. If the repository remains private, access may still depend on GitHub account and repository visibility settings.
 

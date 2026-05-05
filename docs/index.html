@@ -16,7 +16,7 @@
         --ink: #18201f;
         --muted: #5f6862;
         --paper: #f7f4ec;
-        --map-paper: #e7ece5;
+        --map-paper: #edf1ea;
         --line: rgba(24, 32, 31, 0.16);
         --accent: #23836b;
         --danger: #a64028;
@@ -38,16 +38,16 @@
       .shell {
         min-height: 100svh;
         display: grid;
-        grid-template-columns: minmax(300px, 390px) minmax(0, 1fr);
+        grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
       }
 
       aside {
-        padding: 26px;
+        padding: 24px;
         border-right: 1px solid var(--line);
         background: rgba(247, 244, 236, 0.96);
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 20px;
         z-index: 500;
       }
 
@@ -67,8 +67,8 @@
 
       h1 {
         margin: 0;
-        font-size: clamp(2.2rem, 7vw, 4.7rem);
-        line-height: 0.9;
+        font-size: clamp(2.5rem, 5.2vw, 4.05rem);
+        line-height: 0.94;
         letter-spacing: 0;
       }
 
@@ -89,8 +89,8 @@
       }
 
       .metric {
-        min-height: 92px;
-        padding: 14px;
+        min-height: 82px;
+        padding: 13px;
         background: var(--paper);
         display: flex;
         flex-direction: column;
@@ -145,6 +145,30 @@
         gap: 12px;
       }
 
+      .mode-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        border: 1px solid var(--line);
+        background: var(--line);
+      }
+
+      .mode-tabs button {
+        min-height: 36px;
+        border: 0;
+        background: var(--paper);
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .mode-tabs button.active {
+        background: var(--accent);
+        color: #fff;
+      }
+
       .layer-grid {
         display: grid;
         gap: 8px;
@@ -158,7 +182,7 @@
         gap: 12px;
         padding: 9px 10px;
         border: 1px solid var(--line);
-        background: rgba(247, 244, 236, 0.72);
+        background: rgba(247, 244, 236, 0.76);
         color: var(--muted);
         font-size: 0.84rem;
         font-weight: 700;
@@ -216,7 +240,7 @@
           linear-gradient(rgba(24, 32, 31, 0.035) 1px, transparent 1px),
           linear-gradient(90deg, rgba(24, 32, 31, 0.035) 1px, transparent 1px),
           var(--map-paper);
-        background-size: 56px 56px;
+        background-size: 64px 64px;
       }
 
       .leaflet-container {
@@ -236,6 +260,32 @@
         font-size: 0.76rem;
         line-height: 1.35;
         box-shadow: 0 10px 24px rgba(24, 32, 31, 0.08);
+      }
+
+      .map-title {
+        position: absolute;
+        left: 22px;
+        top: 20px;
+        z-index: 450;
+        max-width: min(380px, calc(100% - 44px));
+        padding: 12px 14px;
+        background: rgba(247, 244, 236, 0.84);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        box-shadow: 0 14px 34px rgba(24, 32, 31, 0.08);
+      }
+
+      .map-title strong {
+        display: block;
+        font-size: 0.95rem;
+      }
+
+      .map-title span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.76rem;
+        line-height: 1.35;
       }
 
       .status.error {
@@ -335,11 +385,11 @@
 
         <section class="metrics" aria-label="Map summary">
           <div class="metric">
-            <b id="tract-count">--</b>
+            <b id="tract-count">36</b>
             <span>scored tracts</span>
           </div>
           <div class="metric">
-            <b id="top-score">--</b>
+            <b id="top-score">72.1</b>
             <span>highest score</span>
           </div>
           <div class="metric">
@@ -363,26 +413,31 @@
 
         <section class="layers" aria-label="Optional map layers">
           <h2>Layers</h2>
+          <div class="mode-tabs" aria-label="Layer presets">
+            <button type="button" class="active" data-preset="score">Score</button>
+            <button type="button" data-preset="mobility">Mobility</button>
+            <button type="button" data-preset="amenities">Amenities</button>
+          </div>
           <div class="layer-grid">
             <label class="layer-toggle" style="--swatch: #57995d">
               <span class="layer-name"><span class="swatch"></span>Parks</span>
-              <input type="checkbox" data-layer="Parks" />
+              <input type="checkbox" data-layer="Parks" autocomplete="off" />
             </label>
             <label class="layer-toggle" style="--swatch: #df8434">
               <span class="layer-name"><span class="swatch"></span>Bike lanes</span>
-              <input type="checkbox" data-layer="Bike lanes" />
+              <input type="checkbox" data-layer="Bike lanes" autocomplete="off" />
             </label>
             <label class="layer-toggle" style="--swatch: #2c69ae">
               <span class="layer-name"><span class="swatch"></span>Transit stops</span>
-              <input type="checkbox" data-layer="Transit stops" />
+              <input type="checkbox" data-layer="Transit stops" autocomplete="off" />
             </label>
             <label class="layer-toggle" style="--swatch: #a64028">
               <span class="layer-name"><span class="swatch"></span>Grocery stores</span>
-              <input type="checkbox" data-layer="Grocery stores" />
+              <input type="checkbox" data-layer="Grocery stores" autocomplete="off" />
             </label>
             <label class="layer-toggle" style="--swatch: #705ba6">
               <span class="layer-name"><span class="swatch"></span>Schools</span>
-              <input type="checkbox" data-layer="Schools" />
+              <input type="checkbox" data-layer="Schools" autocomplete="off" />
             </label>
           </div>
         </section>
@@ -409,9 +464,20 @@
 
       <section class="map-wrap" aria-label="Interactive walkability map">
         <div id="map"></div>
+        <div class="map-title">
+          <strong>Walkability score by tract</strong>
+          <span>Higher scores indicate stronger nearby access to parks, transit, bike infrastructure, and groceries.</span>
+        </div>
         <div class="status" id="status">Loading scored tract data...</div>
       </section>
     </main>
+
+    <script src="data/tracts_scored.js"></script>
+    <script src="data/parks.js"></script>
+    <script src="data/bike_lanes.js"></script>
+    <script src="data/transit_stops.js"></script>
+    <script src="data/grocery.js"></script>
+    <script src="data/schools.js"></script>
 
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -424,30 +490,35 @@
         {
           name: "Parks",
           url: "data/parks.geojson",
+          globalName: "A2GEOLENS_PARKS",
           type: "polygon",
           color: "#57995d",
         },
         {
           name: "Bike lanes",
           url: "data/bike_lanes.geojson",
+          globalName: "A2GEOLENS_BIKE_LANES",
           type: "line",
           color: "#df8434",
         },
         {
           name: "Transit stops",
           url: "data/transit_stops.geojson",
+          globalName: "A2GEOLENS_TRANSIT_STOPS",
           type: "point",
           color: "#2c69ae",
         },
         {
           name: "Grocery stores",
           url: "data/grocery.geojson",
+          globalName: "A2GEOLENS_GROCERY",
           type: "point",
           color: "#a64028",
         },
         {
           name: "Schools",
           url: "data/schools.geojson",
+          globalName: "A2GEOLENS_SCHOOLS",
           type: "point",
           color: "#705ba6",
         },
@@ -465,6 +536,12 @@
       const topScoreEl = document.getElementById("top-score");
       const overlayLayers = new Map();
       const overlayRequests = new Map();
+      const layerInputs = new Map();
+      const PRESETS = {
+        score: [],
+        mobility: ["Bike lanes", "Transit stops"],
+        amenities: ["Parks", "Grocery stores", "Schools"],
+      };
 
       function colorForScore(score) {
         if (score >= 70) return "#fde725";
@@ -504,28 +581,43 @@
         if (spec.type === "line") {
           return {
             color: spec.color,
-            weight: 2.5,
-            opacity: 0.9,
+            weight: 1.7,
+            opacity: 0.72,
           };
         }
 
         return {
           color: spec.color,
-          weight: 0.8,
-          opacity: 0.9,
+          weight: 0.5,
+          opacity: 0.72,
           fillColor: spec.color,
-          fillOpacity: 0.35,
+          fillOpacity: 0.2,
         };
       }
 
       function pointMarker(spec, latlng) {
         return L.circleMarker(latlng, {
-          radius: spec.name === "Transit stops" ? 3.5 : 5,
-          color: "#ffffff",
+          radius: spec.name === "Transit stops" ? 2.7 : 4,
+          color: spec.color,
           weight: 1,
-          opacity: 0.95,
+          opacity: 0.82,
           fillColor: spec.color,
-          fillOpacity: 0.92,
+          fillOpacity: 0.32,
+        });
+      }
+
+      function dataFor(spec, fallbackUrl) {
+        if (spec?.globalName && window[spec.globalName]) {
+          return Promise.resolve(window[spec.globalName]);
+        }
+        if (!spec && window.A2GEOLENS_TRACTS_SCORED) {
+          return Promise.resolve(window.A2GEOLENS_TRACTS_SCORED);
+        }
+        return fetch(fallbackUrl).then((response) => {
+          if (!response.ok) {
+            throw new Error(`GeoJSON request failed: ${response.status}`);
+          }
+          return response.json();
         });
       }
 
@@ -537,13 +629,7 @@
           return overlayRequests.get(spec.name);
         }
 
-        const request = fetch(spec.url)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`${spec.name} request failed: ${response.status}`);
-            }
-            return response.json();
-          })
+        const request = dataFor(spec, spec.url)
           .then((geojson) => {
             const layer = L.geoJSON(geojson, {
               style: () => overlayStyle(spec),
@@ -568,6 +654,9 @@
 
       function wireLayerToggles() {
         document.querySelectorAll("[data-layer]").forEach((input) => {
+          input.checked = false;
+          input.disabled = false;
+          layerInputs.set(input.getAttribute("data-layer"), input);
           input.addEventListener("change", (event) => {
             const name = event.target.getAttribute("data-layer");
             const spec = specByName(name);
@@ -600,13 +689,30 @@
         });
       }
 
-      fetch(DATA_URL)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`GeoJSON request failed: ${response.status}`);
+      function setPreset(name) {
+        const enabled = new Set(PRESETS[name] || []);
+        document.querySelectorAll("[data-preset]").forEach((button) => {
+          button.classList.toggle("active", button.getAttribute("data-preset") === name);
+        });
+
+        layerInputs.forEach((input, layerName) => {
+          const shouldEnable = enabled.has(layerName);
+          if (input.checked !== shouldEnable) {
+            input.checked = shouldEnable;
+            input.dispatchEvent(new Event("change"));
           }
-          return response.json();
-        })
+        });
+      }
+
+      function wirePresets() {
+        document.querySelectorAll("[data-preset]").forEach((button) => {
+          button.addEventListener("click", () => {
+            setPreset(button.getAttribute("data-preset"));
+          });
+        });
+      }
+
+      dataFor(null, DATA_URL)
         .then((geojson) => {
           const scores = geojson.features
             .map((feature) => Number(feature.properties.walkability_score))
@@ -650,6 +756,8 @@
           statusEl.textContent = "Select a tract for component metrics.";
 
           wireLayerToggles();
+          wirePresets();
+          setPreset("score");
         })
         .catch((error) => {
           statusEl.classList.add("error");

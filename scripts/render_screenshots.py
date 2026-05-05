@@ -31,6 +31,16 @@ def read_geojson(name: str) -> dict:
     return json.loads((DOCS_DATA / name).read_text(encoding="utf-8"))
 
 
+def write_js_data_bundles() -> None:
+    for src in DOCS_DATA.glob("*.geojson"):
+        variable_name = "A2GEOLENS_" + src.stem.upper().replace("-", "_")
+        data = json.loads(src.read_text(encoding="utf-8"))
+        src.with_suffix(".js").write_text(
+            f"window.{variable_name} = {json.dumps(data, separators=(',', ':'))};\n",
+            encoding="utf-8",
+        )
+
+
 def iter_coords(geometry: dict):
     gtype = geometry.get("type")
     coords = geometry.get("coordinates", [])
@@ -266,6 +276,7 @@ def render(filename: str, *, mode: str) -> None:
 
 def main() -> None:
     SCREENSHOTS.mkdir(parents=True, exist_ok=True)
+    write_js_data_bundles()
     render("hero_map.png", mode="hero")
     render("access_score.png", mode="score")
     render("felt_preview.png", mode="felt")
@@ -274,4 +285,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
