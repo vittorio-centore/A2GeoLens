@@ -22,6 +22,15 @@ This repo is currently private, so GitHub Pages availability depends on the acco
 
 Optional Felt link: _add public Felt map link here after publishing_.
 
+Felt-ready upload files are available in `docs/data/`:
+
+- `tracts_scored.geojson`
+- `parks.geojson`
+- `bike_lanes.geojson`
+- `transit_stops.geojson`
+- `grocery.geojson`
+- `schools.geojson`
+
 ## Methodology
 
 OpenStreetMap features are downloaded with OSMnx for the Ann Arbor, Michigan, USA boundary. The pipeline extracts parks, bike infrastructure, transit stops, schools, and grocery stores, saving each layer as GeoJSON for inspection and QGIS use. Census tract geometry is fetched with pygris from 2020 Census TIGER/Line cartographic boundary data for Washtenaw County, then filtered to tracts whose centroid falls inside Ann Arbor or whose city overlap is at least 25%.
@@ -81,6 +90,8 @@ In QGIS, set the project CRS to EPSG:4326, add an OpenStreetMap XYZ basemap, loa
 
 In Felt, upload `data/processed/tracts_scored.geojson`, style by `walkability_score`, add supporting layers for parks, bike lanes, and transit stops, then paste the shared link into the Live Map section.
 
+The same upload bundle is also committed under `docs/data/`, which is usually easier for final portfolio handoff and GitHub Pages previews.
+
 ## Skills Demonstrated
 
 - QGIS project authoring
@@ -104,4 +115,3 @@ In Felt, upload `data/processed/tracts_scored.geojson`, style by `walkability_sc
 ## Data Sources & Licenses
 
 OpenStreetMap data is available under the Open Database License (ODbL). Census TIGER/Line geography is public domain from the U.S. Census Bureau.
-
