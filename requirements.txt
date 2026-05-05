@@ -1,0 +1,8 @@
+osmnx>=2
+geopandas
+shapely
+pandas
+requests
+pyyaml
+pygris
+

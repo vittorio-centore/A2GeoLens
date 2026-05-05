@@ -1,0 +1,25 @@
+.DS_Store
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+cache/
+
+# Jupyter / notebooks
+.ipynb_checkpoints/
+
+# Reproducible geospatial outputs
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# QGIS local autosaves/backups
+*.qgz~
+*.qgs~
