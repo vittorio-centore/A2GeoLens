@@ -2,50 +2,70 @@
 
 ![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![QGIS 3.x](https://img.shields.io/badge/QGIS-3.x-589632?logo=qgis&logoColor=white)
+![GeoJSON](https://img.shields.io/badge/GeoJSON-web%20ready-23836B)
 
-Walkability & amenity access analysis for Ann Arbor census tracts using OSM data and QGIS.
+**Walkability & amenity access analysis for Ann Arbor census tracts using QGIS-ready geospatial assets, OpenStreetMap data, Census geography, and an interactive web map.**
 
-A2GeoLens pulls open geospatial data for Ann Arbor, scores each census tract on access to parks, transit, grocery stores, and bike infrastructure, then visualizes the results as both a QGIS-ready GeoJSON output and an interactive Leaflet web map. The project surfaces equity gaps in urban infrastructure by showing which neighborhoods have strong walkable access and which remain more car-dependent.
+Live map: <https://vittorio-centore.github.io/A2GeoLens/>
 
-## Live Map
+![A2GeoLens QGIS-style map export](docs/screenshots/hero_map.png)
 
-GitHub Pages: <https://vittorio-centore.github.io/A2GeoLens/>
+## Project Scope
 
-Local preview:
+A2GeoLens is an end-to-end geospatial asset workflow. It downloads open map features for Ann Arbor, prepares Census tract geography, computes tract-level accessibility metrics, styles the outputs for QGIS, and publishes the results as a static interactive map.
 
-```bash
-cd docs
-python -m http.server 8000
-```
+The project is designed to demonstrate the kind of practical QGIS and geospatial production work needed to build and refine digital map assets: clean source layers, reproducible transformations, CRS-aware analysis, styled vector outputs, screenshot exports, and web-ready GeoJSON deliverables.
 
-Then open <http://localhost:8000>. The map also includes local JavaScript data bundles, so `docs/index.html` can be opened directly in a browser for quick preview.
+## Relevance To QGIS Digital Asset Work
 
-GitHub Pages is configured to publish from the `stock` branch's `docs/` folder. If the repository remains private, access may still depend on GitHub account and repository visibility settings.
+This repository includes a starter QGIS project and reusable QGIS style files:
 
-Optional Felt link: _add public Felt map link here after publishing from felt.com_.
+- `qgis/a2geolens.qgz` and `qgis/a2geolens.qgs` for project handoff
+- `qgis/styles/tracts_walkability.qml` for graduated tract symbology
+- `qgis/styles/parks.qml`, `bike_lanes.qml`, `transit_stops.qml`, `grocery.qml`, and `schools.qml` for supporting layers
+- `qgis/README.md` with a desktop QGIS finishing checklist
 
-Felt-ready upload files are available in `docs/data/`:
+Skills demonstrated for a QGIS-focused mapping role:
 
-- `tracts_scored.geojson`
-- `parks.geojson`
-- `bike_lanes.geojson`
-- `transit_stops.geojson`
-- `grocery.geojson`
-- `schools.geojson`
+- QGIS project organization and layer styling
+- QML style asset creation for repeatable symbology
+- Graduated choropleth mapping by analytic score
+- Vector layer preparation for polygons, lines, and points
+- CRS selection and reprojection for distance-safe analysis
+- Spatial joins, clipping, buffering, and nearest-feature measurement
+- OpenStreetMap feature extraction and cleanup
+- Census tract filtering and GeoJSON publication
+- Static map export preparation for documentation and review
+- Web map packaging for digital asset QA and sharing
+
+## Outputs
+
+| Output | Location |
+| --- | --- |
+| Interactive map | `docs/index.html` |
+| GitHub Pages map | <https://vittorio-centore.github.io/A2GeoLens/> |
+| Scored tract GeoJSON | `docs/data/tracts_scored.geojson` |
+| QGIS project | `qgis/a2geolens.qgz` |
+| QGIS style assets | `qgis/styles/*.qml` |
+| Map screenshots | `docs/screenshots/*.png` |
+| OSM fetch script | `scripts/fetch_osm.py` |
+| Access scoring script | `scripts/compute_access.py` |
+
+The web map can be served over HTTP or opened directly from `docs/index.html`; JavaScript data bundles in `docs/data/*.js` make direct file preview work without browser GeoJSON fetch restrictions.
 
 ## Methodology
 
-OpenStreetMap features are downloaded with OSMnx for the Ann Arbor, Michigan, USA boundary. The pipeline extracts parks, bike infrastructure, transit stops, schools, and grocery stores, saving each layer as GeoJSON for inspection and QGIS use. Census tract geometry is fetched with pygris from 2020 Census TIGER/Line cartographic boundary data for Washtenaw County, then filtered to tracts whose centroid falls inside Ann Arbor or whose city overlap is at least 25%.
+OpenStreetMap features are downloaded with OSMnx for Ann Arbor, Michigan. The pipeline extracts parks, bike infrastructure, transit stops, schools, and grocery stores, then saves each layer as GeoJSON for QGIS and web use.
 
-Storage and web outputs use EPSG:4326 for compatibility with GeoJSON, Leaflet, Felt, and QGIS defaults. Distance and length calculations use EPSG:3078, a Michigan meter-based projected CRS, to avoid unit mistakes from foot-based state plane projections.
+Census tract geometry is fetched with pygris from 2020 Census TIGER/Line cartographic boundary data for Washtenaw County. Tracts are retained when their centroid falls inside Ann Arbor or at least 25% of the tract overlaps the city boundary.
 
-The score combines four normalized components: parks intersecting an 800-meter tract buffer, transit stops within each tract, clipped bike-lane length in meters, and distance from tract centroid to the nearest grocery store. Grocery distance is inverted so closer access scores higher. The final `walkability_score` is the unweighted mean of the normalized components, scaled from 0 to 100.
+Storage and web outputs use EPSG:4326 for broad compatibility. Distance and length analysis uses EPSG:3078, a Michigan meter-based projected CRS, so buffers, nearest-feature distances, and bike-lane lengths are measured in meters.
 
-Limitations: OSM completeness varies by neighborhood and feature type, the score is intentionally unweighted, tract-level aggregation hides block-level variation, and an 800-meter buffer is a simple walk-access proxy rather than a routed sidewalk-network measure.
+The final score combines four normalized components: parks intersecting an 800-meter tract buffer, transit stops within each tract, clipped bike-lane length in meters, and distance from tract centroid to the nearest grocery store. Grocery distance is inverted so closer access scores higher. The final `walkability_score` is an unweighted 0-100 score.
 
 ## Tech Stack
 
-QGIS 3.x, Python, GeoPandas, OSMnx, Shapely, pygris, Leaflet, Felt, GeoJSON, GitHub Pages.
+QGIS 3.x, Python, GeoPandas, OSMnx, Shapely, pygris, Leaflet, GeoJSON, GitHub Pages.
 
 ## Setup
 
@@ -57,7 +77,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-If the geospatial Python stack fails to install with pip on your machine, use conda or mamba for GeoPandas, PyProj, Shapely, and Pyogrio, then install the remaining requirements.
+If the geospatial Python stack fails to install with pip, use conda or mamba for GeoPandas, PyProj, Shapely, and Pyogrio, then install the remaining requirements.
 
 Fetch OSM data:
 
@@ -71,48 +91,43 @@ Compute tract scores:
 python scripts/compute_access.py
 ```
 
-Preview the interactive map:
+Regenerate screenshot assets and local JS data bundles:
+
+```bash
+python scripts/render_screenshots.py
+```
+
+Preview the web map:
 
 ```bash
 cd docs
 python -m http.server 8000
 ```
 
-Open the QGIS project after generating data:
+Then open <http://localhost:8000>.
 
-```text
-qgis/a2geolens.qgz
-```
+## QGIS Workflow
 
-The repository includes a starter QGIS project at `qgis/a2geolens.qgz`. If QGIS asks to repair layer paths, point it at the matching GeoJSON files under `data/raw/` and `data/processed/`, then re-save the project.
+Open `qgis/a2geolens.qgz` in QGIS 3.x. If QGIS asks to repair layer paths, point it at the matching GeoJSON files in `data/raw/` and `data/processed/`, then re-save the project.
 
-## QGIS And Felt Finishing Steps
+Recommended desktop finishing steps:
 
-In QGIS, set the project CRS to EPSG:4326, add an OpenStreetMap XYZ basemap, load the raw and scored GeoJSON layers, and style `tracts_scored.geojson` with five natural-break classes using a viridis ramp. Style parks in green, bike lanes as orange lines, and transit stops as small blue circles. Export the final layout screenshots into `docs/screenshots/`.
-
-In Felt, upload `data/processed/tracts_scored.geojson`, style by `walkability_score`, add supporting layers for parks, bike lanes, and transit stops, then paste the shared link into the Live Map section.
-
-The same upload bundle is also committed under `docs/data/`, which is usually easier for final portfolio handoff and GitHub Pages previews.
-
-## Skills Demonstrated
-
-- QGIS project authoring
-- Graduated symbology
-- Spatial joins
-- Buffer analysis
-- CRS reprojection
-- OSM data ingestion
-- Census tract filtering
-- Choropleth web mapping
-- Accessibility scoring methodology
+1. Set project CRS to EPSG:4326.
+2. Add an OpenStreetMap XYZ basemap if desired.
+3. Load the scored tract layer and supporting OSM layers.
+4. Apply the matching `.qml` styles from `qgis/styles/`.
+5. Save the project as `qgis/a2geolens.qgz`.
+6. Export final review images to `docs/screenshots/`.
 
 ## Screenshots
 
-![QGIS hero map](docs/screenshots/hero_map.png)
-
 ![Access score choropleth](docs/screenshots/access_score.png)
 
-![Felt preview](docs/screenshots/felt_preview.png)
+![Interactive map preview](docs/screenshots/felt_preview.png)
+
+## Limitations
+
+OSM completeness varies by feature type and neighborhood. The score is intentionally unweighted and tract-level, so it does not capture every block-level condition. The 800-meter park buffer is a simple proximity measure rather than a routed sidewalk-network travel distance.
 
 ## Data Sources & Licenses
 
